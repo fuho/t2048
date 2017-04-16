@@ -4,24 +4,26 @@ DEFAULT_WIDTH = 4
 DEFAULT_HEIGHT = 4
 
 
-class Grid:
-    def __init__(self, width=None, height=None, data=None):
+class Board:
+    def __init__(self, game, width=None, height=None, data=None):
+        self.game = game
         self.width = width if width else DEFAULT_WIDTH
         self.height = height if height else DEFAULT_HEIGHT
         self.grid = [
             [(data[y][x] if data else 0) for y in range(self.height)]
             for x in range(self.width)
         ]
-        self.score = 0
 
     @classmethod
-    def fromGrid(cls, data):
-        return cls(len(data[0]), len(data), data)
+    def from_grid(cls, data):
+        width = len(data[0])
+        height = len(data)
+        return cls(None, width, height, data)
 
     def fold_selection(self, selection):
         """
-        [2,0,2,4,8] - > [16,0,0,0,0]
-        :param selection: 
+        fold_selection([2,0,2,4,8]) ==> [16,0,0,0,0]
+        :param selection: list of integers 
         :return: Folded selection 
         """
         if sum(selection) == 0:
@@ -34,7 +36,8 @@ class Grid:
                        + [0]
             if left == v:
                 new_v = v*2
-                self.score += new_v
+                if self.game:
+                    self.game.score += new_v
                 return selection[:i - 1] \
                        + self.fold_selection([new_v] + selection[i + 1:]) \
                        + [0]
@@ -63,27 +66,43 @@ class Grid:
         if not direction:
             return
         selection = self.get_column(i)
-        if direction > 0:
+        if direction < 0:
             selection = selection[::-1]
         selection = self.fold_selection(selection)
-        if direction > 0:
+        if direction < 0:
             selection = selection[::-1]
         self.set_column(i, selection)
 
     def fold_row(self, i, direction):
         """
         :param i: Row index 
-        :param direction: Positive for right, negative for left
+        :param direction: Positive for left, negative for right
         """
         if not direction:
             return
         selection = self.get_row(i)
-        if direction > 0:
+        if direction < 0:
             selection = selection[::-1]
         selection = self.fold_selection(selection)
-        if direction > 0:
+        if direction < 0:
             selection = selection[::-1]
         self.set_row(i, selection)
+
+    def fold_up(self):
+        for x in range(self.width):
+            self.fold_column(x, 1)
+
+    def fold_down(self):
+        for x in range(self.width):
+            self.fold_column(x, -1)
+
+    def fold_right(self):
+        for y in range(self.height):
+            self.fold_row(y, -1)
+
+    def fold_left(self):
+        for y in range(self.height):
+            self.fold_row(y, 1)
 
     def introduce_tile(self):
         empties = self.get_empty_fields()
@@ -115,7 +134,7 @@ class Grid:
             for x in range(self.width):
                 result += (
                     str(self.grid[x][y]) if self.grid[x][y] else "").rjust(6)
-        return result + "\n"
+        return result
 
     def __repr__(self) -> str:
         return str(
@@ -133,3 +152,4 @@ class Grid:
 
     def __hash__(self) -> int:
         return super().__hash__()
+

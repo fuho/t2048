@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from t2048.grid import Grid
+from t2048.board import Board
 
 
 class TestGridBasics(TestCase):
@@ -12,7 +12,7 @@ class TestGridBasics(TestCase):
             [32, 64, 4],
             [128, 2, 0]
         ]
-        self.grid = Grid.fromGrid(self.data)
+        self.grid = Board.from_grid(self.data)
 
     def test_width(self):
         self.assertEqual(self.grid.width, 3)
@@ -28,14 +28,14 @@ class TestGridBasics(TestCase):
              [8, 16]]
         b = [[2, 4],
              [8, 16]]
-        self.assertEqual(Grid.fromGrid(a), Grid.fromGrid(b))
+        self.assertEqual(Board.from_grid(a), Board.from_grid(b))
 
     def test_neq(self):
         a = [[2, 6],
              [8, 16]]
         b = [[2, 4],
              [8, 16]]
-        self.assertNotEqual(Grid.fromGrid(a), Grid.fromGrid(b))
+        self.assertNotEqual(Board.from_grid(a), Board.from_grid(b))
 
     def test_hash(self):
         a = [[2, 6],
@@ -43,8 +43,8 @@ class TestGridBasics(TestCase):
         b = [[2, 6],
              [8, 16]]
         self.assertEqual(
-            Grid.fromGrid(a).__hash__(),
-            Grid.fromGrid(b).__hash__()
+            Board.from_grid(a).__hash__(),
+            Board.from_grid(b).__hash__()
         )
 
 
@@ -57,17 +57,17 @@ class TestGridMethods(TestCase):
             [32, 64, 4, 4, 16],
             [128, 2, 0, 4, 32],
         ]
-        self.grid = Grid.fromGrid(self.data)
+        self.grid = Board.from_grid(self.data)
 
     def test_repr(self):
         grid = [[1, 2], [3, 4]]
         self.assertEqual(
-            Grid.fromGrid(grid).__repr__(),
+            Board.from_grid(grid).__repr__(),
             grid.__repr__()
         )
         grid = [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8, 9]]
         self.assertEqual(
-            Grid.fromGrid(grid).__repr__(),
+            Board.from_grid(grid).__repr__(),
             grid.__repr__()
         )
 
@@ -92,8 +92,8 @@ class TestGridMethods(TestCase):
     def test_fold_row_left(self):
         grid = [[2, 2],
                 [8, 8]]
-        grid = Grid.fromGrid(grid)
-        grid.fold_row(0, -1)
+        grid = Board.from_grid(grid)
+        grid.fold_row(0,1)
         self.assertEqual(
             grid.__repr__(),
             [[4, 0],
@@ -103,8 +103,8 @@ class TestGridMethods(TestCase):
     def test_fold_row_right(self):
         grid = [[2, 2],
                 [8, 8]]
-        grid = Grid.fromGrid(grid)
-        grid.fold_row(0, 1)
+        grid = Board.from_grid(grid)
+        grid.fold_row(0, -1)
         self.assertEqual(
             grid.__repr__(),
             [[0, 4],
@@ -114,7 +114,7 @@ class TestGridMethods(TestCase):
     def test_get_empties(self):
         grid = [[0, 0],
                 [0, 0]]
-        grid = Grid.fromGrid(grid)
+        grid = Board.from_grid(grid)
         self.assertEqual(
             grid.get_empty_fields(),
             [(0, 0, 0),(0, 1, 0),(1, 0, 0),(1, 1, 0)]
