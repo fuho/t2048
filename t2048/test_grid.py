@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from t2048.t2048 import Grid
+from t2048.grid import Grid
 
 
 class TestGridBasics(TestCase):
@@ -109,4 +109,13 @@ class TestGridMethods(TestCase):
             grid.__repr__(),
             [[0, 4],
              [8, 8]].__repr__()
+        )
+
+    def test_get_empties(self):
+        grid = [[0, 0],
+                [0, 0]]
+        grid = Grid.fromGrid(grid)
+        self.assertEqual(
+            grid.get_empty_fields(),
+            [(0, 0, 0),(0, 1, 0),(1, 0, 0),(1, 1, 0)]
         )
