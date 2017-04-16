@@ -1,5 +1,5 @@
 from board import Board
-from renderer.text_simple import SimpleTextRenderer
+from renderer.text_block import SimpleBlockRenderer
 
 UP = ("UP", 0, 1)
 DOWN = ("DOWN", 0, -1)
@@ -39,7 +39,7 @@ class Game:
         for _ in range(2):
             (x, y, value) = self.board.introduce_tile()
         # Set up renderer
-        self.renderer = SimpleTextRenderer(self)
+        self.renderer = SimpleBlockRenderer(self)
         self.state = "READY"
 
     def finish(self):

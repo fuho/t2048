@@ -12,16 +12,20 @@ class TestGridBasics(TestCase):
             [32, 64, 4],
             [128, 2, 0]
         ]
-        self.grid = Board.from_grid(self.data)
+        self.board = Board.from_grid(self.data)
 
     def test_width(self):
-        self.assertEqual(self.grid.width, 3)
+        self.assertEqual(self.board.width, 3)
 
     def test_height(self):
-        self.assertEqual(self.grid.height, 4)
+        self.assertEqual(self.board.height, 4)
 
     def test_cell_access(self):
-        self.assertEqual(self.grid.grid[0][3], 128)
+        self.assertEqual(self.board.grid[0][3], 128)
+
+
+    def test_get_largest(self):
+        self.assertEqual(self.board.get_largest(),128)
 
     def test_eq(self):
         a = [[2, 4],
@@ -57,7 +61,7 @@ class TestGridMethods(TestCase):
             [32, 64, 4, 4, 16],
             [128, 2, 0, 4, 32],
         ]
-        self.grid = Board.from_grid(self.data)
+        self.board = Board.from_grid(self.data)
 
     def test_repr(self):
         grid = [[1, 2], [3, 4]]
@@ -72,20 +76,20 @@ class TestGridMethods(TestCase):
         )
 
     def test_get_column(self):
-        self.assertListEqual(self.grid.get_column(0), [0, 32, 32, 128])
-        self.assertListEqual(self.grid.get_column(1), [2, 4, 64, 2])
+        self.assertListEqual(self.board.get_column(0), [0, 32, 32, 128])
+        self.assertListEqual(self.board.get_column(1), [2, 4, 64, 2])
 
     def test_get_row(self):
-        self.assertListEqual(self.grid.get_row(0), [0, 2, 2, 4, 0])
-        self.assertListEqual(self.grid.get_row(1), [32, 4, 8, 8, 16])
+        self.assertListEqual(self.board.get_row(0), [0, 2, 2, 4, 0])
+        self.assertListEqual(self.board.get_row(1), [32, 4, 8, 8, 16])
 
     def test_fold_selection(self):
         self.assertListEqual(
-            self.grid.fold_selection([0, 2, 2, 4, 0]),
+            self.board.fold_selection([0, 2, 2, 4, 0]),
             [8, 0, 0, 0, 0]
         )
         self.assertListEqual(
-            self.grid.fold_selection([32, 4, 8, 8, 16]),
+            self.board.fold_selection([32, 4, 8, 8, 16]),
             [32, 4, 32, 0, 0]
         )
 

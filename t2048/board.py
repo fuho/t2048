@@ -121,6 +121,9 @@ class Board:
             if not self.grid[x][y]
         ]
 
+    def get_largest(self):
+        return max([v for row in self.grid for v in row])
+
     def __getitem__(self, index):
         return self.grid[index]
 
