@@ -13,6 +13,10 @@ class Grid:
             for x in range(self.width)
         ]
 
+    @classmethod
+    def fromGrid(cls, data):
+        return cls(len(data[0]), len(data), data)
+
     def fold_selection(self, selection):
         """
         [2,0,2,4,8] - > [16,0,0,0,0]
@@ -24,10 +28,9 @@ class Grid:
         left = None
         for i, v in enumerate(selection):
             if v == 0 and i < len(selection) - 1:
-                r = selection[:i] \
-                    + self.fold_selection(selection[i + 1:]) \
-                    + [0]
-                return r
+                return selection[:i] \
+                       + self.fold_selection(selection[i + 1:]) \
+                       + [0]
             if left == v:
                 return selection[:i - 1] \
                        + self.fold_selection([v * 2] + selection[i + 1:]) \
@@ -101,6 +104,15 @@ class Grid:
                 for y in range(self.height)
             ]
         )
+
+    def __eq__(self, o: object) -> bool:
+        return self.__repr__() == o.__repr__()
+
+    def __ne__(self, o: object) -> bool:
+        return not self.__eq__(o)
+
+    def __hash__(self) -> int:
+        return super().__hash__()
 
 
 class Game:
